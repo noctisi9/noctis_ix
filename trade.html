@@ -14,40 +14,58 @@
         h1 { color: var(--primary-color); font-size: 3em; }
         .clock { font-size: 1.5em; color: #888; margin-top: 10px; }
 
-        .trade-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
         .card { background: #1a1a1a; padding: 20px; border-radius: 10px; border-top: 2px solid var(--primary-color); margin-bottom: 20px; }
         
-        input, textarea { width: 100%; padding: 10px; margin: 10px 0; background: #222; border: 1px solid #333; color: white; border-radius: 5px; }
-        button { background: var(--primary-color); color: white; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; border-radius: 5px; }
-        
-        @media (max-width: 768px) { .trade-grid { grid-template-columns: 1fr; } }
+        /* Signal Styling */
+        .active-signal { text-align: center; border-bottom: 4px solid #333; margin-bottom: 50px; }
+        .label { font-size: 0.7rem; letter-spacing: 4px; opacity: 0.5; margin-bottom: 10px; }
+        .stats-row { display: flex; justify-content: space-around; padding-top: 20px; border-top: 1px solid #333; font-family: monospace; }
+
+        /* History Grid: 4 items per row */
+        .history-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 15px; 
+            padding: 0 10px; 
+        }
+
+        /* History Box Styling */
+        .history-card { 
+            background: #161616; 
+            border-radius: 8px; 
+            padding: 15px; 
+            border-left: 4px solid #444; 
+            font-size: 0.85rem; 
+        }
+        .win { border-left-color: #22c55e; color: #22c55e; }
+        .loss { border-left-color: #ff2a2a; color: #ff2a2a; }
+
+        @media (max-width: 1000px) { .history-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .history-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
-    <a href="index.html" class="nav-back">← Back to Home</a>
+    <a href="index.html" class="nav-back">← Home</a>
+    
     <header>
         <h1>iTRADE XXIV</h1>
         <div id="digital-clock" class="clock">00:00:00</div>
     </header>
 
-    <div class="trade-grid">
-        <section>
-            <div class="card">
-                <h2>Log New Trade</h2>
-                <form id="trade-form">
-                    <input type="text" id="title" placeholder="Asset (e.g. BTC/USD)" required>
-                    <textarea id="desc" placeholder="Analysis..." required></textarea>
-                    <button type="submit">Post Idea</button>
-                </form>
-            </div>
-        </section>
-
-        <section id="feed">
-            <h2>Recent Ideas</h2>
-            <div id="trade-ideas-list">
-                </div>
-        </section>
+    <div id="signal-container" class="card active-signal">
+        <h2 class="label">LIVE CRYO IX SIGNAL</h2>
+        <div id="signal-type" style="font-size: 3.5rem; font-weight: 900;">AWAITING...</div>
+        <div class="stats-row">
+            <div>ASSET: <span id="sig-asset">US30</span></div>
+            <div>ENTRY: <span id="sig-price">0.00</span></div>
+            <div>TP: <span id="sig-tp">0.00</span></div>
+            <div>SL: <span id="sig-sl">0.00</span></div>
+        </div>
     </div>
+
+    <h2 style="text-align:center; color: #888; font-size: 0.8rem; letter-spacing: 2px;">TRADE HISTORY</h2>
+    <div id="history-grid" class="history-grid">
+        </div>
 
     <script>
         function updateClock() {
@@ -56,15 +74,69 @@
         }
         setInterval(updateClock, 1000);
 
-        document.getElementById('trade-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const list = document.getElementById('trade-ideas-list');
-            const div = document.createElement('div');
-            div.className = 'card';
-            div.innerHTML = `<h3>${document.getElementById('title').value}</h3><p>${document.getElementById('desc').value}</p><small>${new Date().toLocaleString()}</small>`;
-            list.prepend(div);
-            e.target.reset();
-        });
+        let lastSignalId = "";
+
+        // 1. FETCH THE LIVE SIGNAL
+        async function fetchLiveSignal() {
+            try {
+                const response = await fetch('signal.json?t=' + Date.now());
+                const data = await response.json();
+
+                const container = document.getElementById('signal-container');
+                const typeDisplay = document.getElementById('signal-type');
+
+                typeDisplay.innerText = data.type;
+                document.getElementById('sig-price').innerText = data.price;
+                document.getElementById('sig-tp').innerText = data.tp;
+                document.getElementById('sig-sl').innerText = data.sl;
+
+                // Color logic for Active Card
+                if (data.type === "BUY") { 
+                    container.style.borderColor = "#22c55e"; 
+                    typeDisplay.style.color = "#22c55e"; 
+                } else if (data.type === "SELL") { 
+                    container.style.borderColor = "#ff2a2a"; 
+                    typeDisplay.style.color = "#ff2a2a"; 
+                } else { 
+                    container.style.borderColor = "#333"; 
+                    typeDisplay.style.color = "#888"; 
+                }
+            } catch (e) { console.log("Signal Sync..."); }
+        }
+
+        // 2. FETCH THE TRADE HISTORY (GRID)
+        async function loadTradeHistory() {
+            try {
+                const res = await fetch('history.json?t=' + Date.now());
+                const history = await res.json();
+                const grid = document.getElementById('history-grid');
+                
+                grid.innerHTML = ''; 
+                
+                history.forEach(trade => {
+                    const div = document.createElement('div');
+                    const resultClass = trade.result === "WIN" ? "win" : "loss";
+                    div.className = `history-card ${resultClass}`;
+                    div.innerHTML = `
+                        <div style="font-weight:bold">${trade.type} US30</div>
+                        <div style="font-size:0.7rem; opacity:0.6">${trade.date}</div>
+                        <hr style="opacity:0.1; margin:5px 0">
+                        <div>E: ${trade.price}</div>
+                        <div>RES: <strong>${trade.result}</strong></div>
+                    `;
+                    grid.appendChild(div);
+                });
+            } catch (e) { console.log("History Sync..."); }
+        }
+
+        // Start Intervals
+        setInterval(fetchLiveSignal, 5000); // Check signal every 5s
+        setInterval(loadTradeHistory, 30000); // Check history every 30s
+        
+        // Initial Load
+        fetchLiveSignal();
+        loadTradeHistory();
+        updateClock();
     </script>
 </body>
 </html>
