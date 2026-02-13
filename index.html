@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NOCTIS IX | Hub</title>
@@ -425,105 +427,170 @@
   </section>
 
   <div class="login-modal" id="loginModal">
-    <div class="login-content">
-      <span class="close-btn" onclick="closeModal()">✕</span>
-      <div class="login-tabs">
-        <button class="tab-btn active" onclick="openTab('login')">Login</button>
-        <button class="tab-btn" onclick="openTab('signup')">Sign Up</button>
-      </div>
-      <form class="login-form active" id="loginForm">
-        <div class="form-group"><label for="loginEmail">Email</label><input type="email" id="loginEmail" required></div>
-        <div class="form-group"><label for="loginPassword">Password</label><input type="password" id="loginPassword" required></div>
-        <button type="submit">Login</button>
-      </form>
-      <form class="signup-form" id="signupForm">
-        <div class="form-group"><label for="signupName">Name</label><input type="text" id="signupName" required></div>
-        <div class="form-group"><label for="signupEmail">Email</label><input type="email" id="signupEmail" required></div>
-        <div class="form-group"><label for="signupPassword">Password</label><input type="password" id="signupPassword" required></div>
-        <button type="submit">Sign Up</button>
-      </form>
+  <div class="login-content">
+    <span class="close-btn" onclick="closeModal()">✕</span>
+    
+    <button id="google-login-btn" style="background: white; color: #444; width: 100%; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 10px; padding: 10px; border: none; font-weight: bold; cursor: pointer;">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
+        Continue with Google
+    </button>
+    
+    <div style="text-align:center; margin-bottom: 20px; color: rgba(255,255,255,0.5); font-size: 0.8rem;">— OR USE EMAIL —</div>
+
+    <div class="login-tabs">
+      <button class="tab-btn active" onclick="openTab('login')">Login</button>
+      <button class="tab-btn" onclick="openTab('signup')">Sign Up</button>
     </div>
+
+    <form class="login-form active" id="loginForm">
+      <div class="form-group"><label for="loginEmail">Email</label><input type="email" id="loginEmail" required></div>
+      <div class="form-group"><label for="loginPassword">Password</label><input type="password" id="loginPassword" required></div>
+      <button type="submit">Login</button>
+    </form>
+
+    <form class="signup-form" id="signupForm">
+      <div class="form-group"><label for="signupName">Name</label><input type="text" id="signupName" required></div>
+      <div class="form-group"><label for="signupEmail">Email</label><input type="email" id="signupEmail" required></div>
+      <div class="form-group"><label for="signupPassword">Password</label><input type="password" id="signupPassword" required></div>
+      <button type="submit">Sign Up</button>
+    </form>
   </div>
+</div>
 
   <script>
-    const canvas = document.getElementById('bg-canvas');
-    const ctx = canvas.getContext('2d');
+  // 1. FIREBASE CONFIGURATION
+  const firebaseConfig = {
+    apiKey: "AIzaSyCechk_U54bJCdsi3CY1B8HueeQXFeEveE",
+    authDomain: "noctis-i9.firebaseapp.com",
+    projectId: "noctis-i9",
+    storageBucket: "noctis-i9.firebasestorage.app",
+    messagingSenderId: "32989428853",
+    appId: "1:32989428853:web:49597558fc6d6dc3598c3c",
+    measurementId: "G-V09L4Q8D7S"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  // 2. AUTHENTICATION LOGIC
+  document.getElementById('google-login-btn').onclick = () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider)
+      .then((result) => {
+        closeModal();
+      }).catch((error) => alert(error.message));
+  };
+
+  document.getElementById('signupForm').onsubmit = (e) => {
+    e.preventDefault();
+    const email = document.getElementById('signupEmail').value;
+    const pass = document.getElementById('signupPassword').value;
+    auth.createUserWithEmailAndPassword(email, pass)
+      .then(() => {
+        alert("Account Created!");
+        closeModal();
+      }).catch((error) => alert(error.message));
+  };
+
+  document.getElementById('loginForm').onsubmit = (e) => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const pass = document.getElementById('loginPassword').value;
+    auth.signInWithEmailAndPassword(email, pass)
+      .then(() => {
+        closeModal();
+      }).catch((error) => alert(error.message));
+  };
+
+  // 3. MODAL & TAB CONTROL
+  function openModal() { document.getElementById('loginModal').style.display = 'flex'; }
+  function closeModal() { document.getElementById('loginModal').style.display = 'none'; }
+  
+  function openTab(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.login-form, .signup-form').forEach(form => form.classList.remove('active'));
     
-    function setCanvasSize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    const tabs = document.querySelectorAll('.tab-btn');
+    const activeBtn = (tabName === 'login') ? tabs[0] : tabs[1];
+    if(activeBtn) activeBtn.classList.add('active');
+    document.getElementById(tabName + 'Form').classList.add('active');
+  }
+
+  auth.onAuthStateChanged(user => {
+    if (!user) {
+      setTimeout(openModal, 4000); 
+    } else {
+      closeModal();
     }
-    setCanvasSize();
+  });
 
-    window.addEventListener('resize', () => {
-      setCanvasSize();
-      initParticles();
-    });
+  // 4. BACKGROUND ANIMATION LOGIC
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  const particleCount = 80;
+  let mouseX = window.innerWidth / 2;
+  let mouseY = window.innerHeight / 2;
 
-    let particles = [];
-    const particleCount = 80;
+  function setCanvasSize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
 
-    function initParticles() {
-      particles = [];
-      for (let i = 0; i < particleCount; i++) {
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          size: Math.random() * 3 + 1,
-          speedX: (Math.random() - 0.5) * 1,
-          speedY: (Math.random() - 0.5) * 1,
-          color: `rgba(${Math.floor(Math.random() * 100 + 155)}, 0, 0, ${Math.random() * 0.7 + 0.1})`
-        });
-      }
-    }
-
-    initParticles();
-
-    let mouseX = canvas.width / 2;
-    let mouseY = canvas.height / 2;
-
-    window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    });
-
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((particle, index) => {
-        particle.x += particle.speedX;
-        particle.y += particle.speedY;
-        if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1;
-        if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1;
-        
-        ctx.fillStyle = particle.color;
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fill();
-        
-        const distanceToMouse = Math.sqrt(Math.pow(particle.x - mouseX, 2) + Math.pow(particle.y - mouseY, 2));
-        if (distanceToMouse < 150) {
-          ctx.strokeStyle = particle.color;
-          ctx.lineWidth = 0.5;
-          ctx.beginPath();
-          ctx.moveTo(particle.x, particle.y);
-          ctx.lineTo(mouseX, mouseY);
-          ctx.stroke();
-        }
+  function initParticles() {
+    particles = [];
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 3 + 1,
+        speedX: (Math.random() - 0.5) * 1,
+        speedY: (Math.random() - 0.5) * 1,
+        color: `rgba(${Math.floor(Math.random() * 100 + 155)}, 0, 0, ${Math.random() * 0.7 + 0.1})`
       });
-      requestAnimationFrame(animate);
     }
+  }
 
-    animate();
+  window.addEventListener('resize', () => {
+    setCanvasSize();
+    initParticles();
+  });
 
-    function openModal() { document.getElementById('loginModal').style.display = 'flex'; }
-    function closeModal() { document.getElementById('loginModal').style.display = 'none'; }
-    function openTab(tabName) {
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.login-form, .signup-form').forEach(form => form.classList.remove('active'));
-      event.currentTarget.classList.add('active');
-      document.getElementById(tabName + 'Form').classList.add('active');
-    }
-    setTimeout(openModal, 4000);
-  </script>
+  window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach((particle) => {
+      particle.x += particle.speedX;
+      particle.y += particle.speedY;
+      if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1;
+      if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1;
+      
+      ctx.fillStyle = particle.color;
+      ctx.beginPath();
+      ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+      ctx.fill();
+      
+      const dist = Math.sqrt(Math.pow(particle.x - mouseX, 2) + Math.pow(particle.y - mouseY, 2));
+      if (dist < 150) {
+        ctx.strokeStyle = particle.color;
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(particle.x, particle.y);
+        ctx.lineTo(mouseX, mouseY);
+        ctx.stroke();
+      }
+    });
+    requestAnimationFrame(animate);
+  }
+
+  setCanvasSize();
+  initParticles();
+  animate();
+</script>
 </body>
 </html>
