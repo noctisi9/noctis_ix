@@ -369,13 +369,30 @@
   <section id="about">
     <div class="section-content">
       <div class="two-column">
-        <div class="info-box">
-          <h2>About Me</h2>
-          <p>Entrepreneur | Trader | Student</p>
-          <div class="contact-item"><i>✉️</i><span>contact@noctisix.com</span></div>
-          <div class="contact-item"><i>📱</i><span>+1 234 567 8900</span></div>
-          <div class="contact-item"><i>📍</i><span>Digital Nomad</span></div>
+div class="info-box">
+        <h2>THE ARCHITECT</h2>
+        <p style="color: #f00; font-weight: bold; letter-spacing: 2px; margin-bottom: 20px;">
+          ENTREPRENEUR | TRADER | STUDENT
+        </p>
+        
+        <p>
+          Wealth is a language. To possess it, you must first learn it. My entry into the markets and entrepreneurship is driven by a singular objective: <b>Absolute Financial Freedom.</b> 
+        </p>
+        
+        <p>
+          I operate with an analytical mind that thrives on calculated risk. I study the world to extract value. I share these interpretations—not as gospel, but as fuel for the next individual to find their own edge.
+        </p>
+
+        <p>
+          <b>The Vision:</b> When you enter this hub, the objective is evolution. Discover, grow, and become rich.
+        </p>
+
+        <div class="contact-list" style="margin-top: 30px;">
+          <div class="contact-item"><i>✉️</i><span>noctisblacc@gmail.com</span></div>
+          <div class="contact-item"><i>📱</i><span>@noctis_i9</span></div>
+          <div class="contact-item"><i>📍</i><span>Digital Nomad | Global HQ</span></div>
         </div>
+      </div>
 
         <div class="form-box">
           <h2>Get In Touch</h2>
@@ -412,6 +429,12 @@
 </div>
 
   <script>
+const templateParams = {
+    from_name: document.getElementById('name').value,  // Matches {{from_name}}
+    from_email: document.getElementById('email').value, // Matches {{from_email}}
+    message: document.getElementById('message').value   // Matches {{message}}
+};
+    
   // 1. FIREBASE CONFIGURATION
   const firebaseConfig = {
     apiKey: "AIzaSyCechk_U54bJCdsi3CY1B8HueeQXFeEveE",
@@ -517,6 +540,7 @@
 </script>
 </body>
 </html>
+
 
 
 
