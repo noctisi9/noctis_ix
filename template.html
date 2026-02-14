@@ -91,45 +91,50 @@
         </footer>
     </div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCechk_U54bJCdsi3CY1B8HueeQXFeEveE",
-            authDomain: "noctis-i9.firebaseapp.com",
-            projectId: "noctis-i9",
-            storageBucket: "noctis-i9.firebasestorage.app",
-            messagingSenderId: "32989428853",
-            appId: "1:32989428853:web:49597558fc6d6dc3598c3c"
-        };
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyCechk_U54bJCdsi3CY1B8HueeQXFeEveE",
+        authDomain: "noctis-i9.firebaseapp.com",
+        projectId: "noctis-i9",
+        storageBucket: "noctis-i9.firebasestorage.app",
+        messagingSenderId: "32989428853",
+        appId: "1:32989428853:web:49597558fc6d6dc3598c3c"
+    };
 
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const db = firebase.firestore();
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
 
-        // Capture the ID from the URL string
-        const urlParams = new URLSearchParams(window.location.search);
-        const docId = urlParams.get('id');
+    // Capture the ID and the Collection from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const docId = urlParams.get('id');
+    const colName = urlParams.get('col') || "logic_lab"; // Defaults to logic_lab if col is missing
 
-        if (docId) {
-            db.collection("logic_lab").doc(docId).get().then((doc) => {
-                if (doc.exists) {
-                    const data = doc.data();
-                    document.getElementById('title').innerText = data.title;
-                    document.getElementById('content').innerHTML = data.content;
-                    
-                    if (data.createdAt) {
-                        document.getElementById('date').innerText = "ENTRY LOGGED: " + data.createdAt.toDate().toDateString();
-                    }
-                } else {
-                    document.getElementById('title').innerText = "ERROR 404";
-                    document.getElementById('content').innerHTML = "Investigation document not found in database.";
+    if (docId) {
+        // Dynamic collection fetching based on colName
+        db.collection(colName).doc(docId).get().then((doc) => {
+            if (doc.exists) {
+                const data = doc.data();
+                document.getElementById('title').innerText = data.title;
+                document.getElementById('content').innerHTML = data.content;
+                
+                if (data.createdAt) {
+                    document.getElementById('date').innerText = "ENTRY LOGGED: " + data.createdAt.toDate().toDateString();
                 }
-            }).catch((error) => {
-                console.error("Transmission Error:", error);
-            });
-        } else {
-            window.location.href = "study.html";
-        }
-    </script>
+                console.log(`Successfully fetched ${docId} from ${colName}`);
+            } else {
+                document.getElementById('title').innerText = "ERROR 404";
+                document.getElementById('content').innerHTML = `Investigation document not found in [${colName}].`;
+            }
+        }).catch((error) => {
+            console.error("Transmission Error:", error);
+            document.getElementById('content').innerHTML = "Critical database connection failure.";
+        });
+    } else {
+        // No ID found, redirect back to home or a main hub
+        window.location.href = "index.html";
+    }
+</script>
 </body>
 </html>
