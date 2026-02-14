@@ -17,32 +17,15 @@
         h1 { color: var(--primary); font-size: 3rem; text-transform: uppercase; letter-spacing: 4px; }
         .description { color: #bbb; line-height: 1.6; }
 
-        /* Calculator Section */
-        .calculator-box { 
-            background: #111; border: 1px solid var(--primary); padding: 30px; 
-            border-radius: 15px; max-width: 600px; margin: 0 auto 80px;
-            box-shadow: 0 0 20px rgba(255, 42, 42, 0.1);
-        }
-        .calculator-box h2 { color: var(--primary); margin-top: 0; text-align: center; font-size: 1.2rem; text-transform: uppercase; }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-size: 0.8rem; color: #888; }
-        input { width: 100%; padding: 10px; background: #000; border: 1px solid #333; color: white; border-radius: 5px; box-sizing: border-box; }
-        input:focus { border-color: var(--primary); outline: none; }
-        .calc-result { 
-            margin-top: 20px; padding: 15px; background: rgba(255, 42, 42, 0.1); 
-            text-align: center; border-radius: 5px; border: 1px dashed var(--primary);
-        }
-        #runway-output { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
-
         /* Grid */
         .row-title { border-left: 4px solid var(--primary); padding-left: 15px; margin: 40px 0 20px; text-transform: uppercase; }
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-        .card { background: var(--card-bg); border-radius: 10px; overflow: hidden; text-decoration: none; color: white; transition: 0.3s; border: 1px solid #222; }
-        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .card img { width: 100%; height: 160px; object-fit: cover; }
-        .card-content { padding: 15px; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+        .card { background: var(--card-bg); border-radius: 10px; overflow: hidden; text-decoration: none; color: white; transition: 0.3s; border: 1px solid #222; display: block; }
+        .card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 20px rgba(255, 42, 42, 0.1); }
+        .card img { width: 100%; height: 180px; object-fit: cover; }
+        .card-content { padding: 20px; }
         .card-content h3 { margin: 0 0 10px; color: var(--primary); font-size: 1.1rem; }
-        .card-content p { font-size: 0.85rem; color: #999; margin: 0; }
+        .card-content p { font-size: 0.85rem; color: #999; margin: 0; line-height: 1.5; }
 
         footer { text-align: center; padding: 60px; color: #444; font-size: 0.8rem; border-top: 1px solid #222; margin-top: 80px; }
         footer b { color: var(--primary); }
@@ -61,75 +44,54 @@
         </p>
     </div>
 
-
-    <h2 class="row-title">Execution & Strategy</h2>
-    <div class="grid-container">
-        <a href="#" class="card">
-            <img src="https://placehold.co/400x250/111/ff2a2a?text=Zero+to+One" alt="Strategy">
-            <div class="card-content">
-                <h3>Zero to One</h3>
-                <p>Notes on Startups, or How to Build the Future by Peter Thiel.</p>
-            </div>
-        </a>
-        <a href="#" class="card">
-            <img src="https://placehold.co/400x250/111/ff2a2a?text=Lean+Startup" alt="Strategy">
-            <div class="card-content">
-                <h3>The Lean Startup</h3>
-                <p>How constant innovation creates radically successful businesses.</p>
-            </div>
-        </a>
-        <a href="#" class="card">
-            <img src="https://placehold.co/400x250/111/ff2a2a?text=Blue+Ocean" alt="Strategy">
-            <div class="card-content">
-                <h3>Blue Ocean Strategy</h3>
-                <p>How to create uncontested market space and make competition irrelevant.</p>
-            </div>
-        </a>
-        <a href="#" class="card">
-            <img src="https://placehold.co/400x250/111/ff2a2a?text=Blitzscaling" alt="Strategy">
-            <div class="card-content">
-                <h3>Blitzscaling</h3>
-                <p>The lightning-fast path to building massively valuable companies.</p>
-            </div>
-        </a>
-    </div>
-
-    <h2 class="row-title">Sales & Growth</h2>
-    <div class="grid-container">
-        <a href="#" class="card">
-            <img src="/assets/img/c17e783010237d8b3dad60ba6dc96f9b.jpg" alt="Growth">
-            <div class="card-content">
-                <h3>The Psychology of Persuasion</h3>
-                <p>Understanding the six weapons of influence in business.</p>
-            </div>
-        </a>
-        <a href="#" class="card">
-            <img src="https://placehold.co/400x250/111/ff2a2a?text=StoryBrand" alt="Growth">
-            <div class="card-content">
-                <h3>Building a StoryBrand</h3>
-                <p>Clarify your message so customers will listen.</p>
-            </div>
-        </a>
-        <a href="#" class="card">
-            <img src="https://placehold.co/400x250/111/ff2a2a?text=Hooked" alt="Growth">
-            <div class="card-content">
-                <h3>Hooked</h3>
-                <p>How to build habit-forming products that keep users coming back.</p>
-            </div>
-        </a>
-        <a href="#" class="card">
-            <img src="https://placehold.co/400x250/111/ff2a2a?text=Traction" alt="Growth">
-            <div class="card-content">
-                <h3>Traction</h3>
-                <p>A guide to getting customers and achieving explosive growth.</p>
-            </div>
-        </a>
-    </div>
+    <h2 class="row-title">Active Investigations</h2>
+    <div id="entrepreneur-grid" class="grid-container">
+        </div>
 
     <footer>
         <p>&copy; 2026 <b>Noctis IX</b> | Entrepreneurship Division</p>
         <p>Logic Lab T & C Apply</p>
     </footer>
 
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCechk_U54bJCdsi3CY1B8HueeQXFeEveE",
+            authDomain: "noctis-i9.firebaseapp.com",
+            projectId: "noctis-i9",
+            storageBucket: "noctis-i9.firebasestorage.app",
+            messagingSenderId: "32989428853",
+            appId: "1:32989428853:web:49597558fc6d6dc3598c3c"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        function loadEntrepreneurLab() {
+            const grid = document.getElementById('entrepreneur-grid');
+            
+            db.collection("entrepreneur_lab").orderBy("createdAt", "desc").onSnapshot((querySnapshot) => {
+                grid.innerHTML = ""; 
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    grid.innerHTML += `
+                        <a href="template.html?id=${doc.id}&col=entrepreneur_lab" class="card">
+                            <img src="${data.image || 'https://placehold.co/400x250/111/ff2a2a?text=Strategy'}" alt="Strategy">
+                            <div class="card-content">
+                                <h3>${data.title}</h3>
+                                <p>${data.description}</p>
+                            </div>
+                        </a>
+                    `;
+                });
+            });
+        }
+
+        loadEntrepreneurLab();
+    </script>
 </body>
 </html>
