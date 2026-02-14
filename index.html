@@ -3,6 +3,13 @@
 <head>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script type="text/javascript">
+  (function() {
+    emailjs.init("LOqsRAyS4cF37l2j1"); 
+  })();
+
+</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NOCTIS IX | Hub</title>
@@ -132,10 +139,11 @@
     }
 
     /* Desktop Staircase offsets */
-.project-box:nth-child(1) { background-image: url('assets/img1.1.png'); margin-bottom: 60px; }
-    .project-box:nth-child(2) { background-image: url('assets/img1.2.png'); margin-bottom: 40px; }
-    .project-box:nth-child(3) { background-image: url('assets/img1.3.png'); margin-bottom: 40px; }
-    .project-box:nth-child(4) { background-image: url('assets/img1.4.png'); }
+    .project-box:nth-child(1) { background-image: url('/assets/img/img1.1.png'); margin-bottom: 60px; }
+    .project-box:nth-child(2) { background-image: url('/assets/img/img1.2.png'); margin-bottom: 40px; }
+    .project-box:nth-child(3) { background-image: url('/assets/img/img1.3.png'); margin-bottom: 40px; }
+    .project-box:nth-child(4) { background-image: url('/assets/img/img1.4.png'); }
+
     .project-box::before {
       content: '';
       position: absolute;
@@ -149,7 +157,7 @@
 
     .project-box:hover {
       transform: translateY(-10px);
-      box-shadow: 0 15px 30px rgba(234, 0, 0, 0.9);
+      box-shadow: 0 15px 30px rgba(234, 0, 0, 0.568);
     }
 
     .project-content {
@@ -355,7 +363,7 @@
           <div class="project-content">
           </div>
         </a>
-        <a href="entrepreneur.html" class="project-box">
+        <a href="#" class="project-box">
           <div class="project-content">
           </div>
         </a>
@@ -367,9 +375,9 @@
   </section>
 
   <section id="about">
-    <div class="section-content">
-      <div class="two-column">
-div class="info-box">
+  <div class="section-content">
+    <div class="two-column">
+      <div class="info-box">
         <h2>THE ARCHITECT</h2>
         <p style="color: #f00; font-weight: bold; letter-spacing: 2px; margin-bottom: 20px;">
           ENTREPRENEUR | TRADER | STUDENT
@@ -394,26 +402,29 @@ div class="info-box">
         </div>
       </div>
 
-        <div class="form-box">
-          <h2>Get In Touch</h2>
-          <form>
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" id="name" required>
-            </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" required>
-            </div>
-            <div class="form-group">
-              <label for="message">Message</label>
-              <textarea id="message" required></textarea>
-            </div>
-            <button type="submit">Send Message</button>
-          </form>
-        </div>
+      <div class="form-box">
+        <h2>Establish Connection</h2>
+        <form id="contact-form">
+          <div class="form-group">
+            <label for="name">Identification</label>
+            <input type="text" id="name" placeholder="Your Name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Digital Address</label>
+            <input type="email" id="email" placeholder="Email" required>
+          </div>
+          <div class="form-group">
+            <label for="message">Transmission</label>
+            <textarea id="message" placeholder="Your Message..." required></textarea>
+          </div>
+          <button type="submit">Send Message</button>
+        </form>
       </div>
     </div>
+  </div>
+</section>
+
+
   </section>
 
   <div class="login-modal" id="loginModal">
@@ -429,12 +440,6 @@ div class="info-box">
 </div>
 
   <script>
-const templateParams = {
-    from_name: document.getElementById('name').value,  // Matches {{from_name}}
-    from_email: document.getElementById('email').value, // Matches {{from_email}}
-    message: document.getElementById('message').value   // Matches {{message}}
-};
-    
   // 1. FIREBASE CONFIGURATION
   const firebaseConfig = {
     apiKey: "AIzaSyCechk_U54bJCdsi3CY1B8HueeQXFeEveE",
@@ -470,7 +475,30 @@ const templateParams = {
       closeModal();
     }
   });
+document.getElementById('contact-form').onsubmit = function(e) {
+  e.preventDefault();
+  const btn = this.querySelector('button');
+  btn.innerHTML = "TRANSMITTING...";
+  btn.disabled = true;
 
+  const templateParams = {
+    from_name: document.getElementById('name').value,
+    from_email: document.getElementById('email').value,
+    message: document.getElementById('message').value
+  };
+
+  emailjs.send('service_8rfoefj', 'template_xswe4zs', templateParams)
+    .then(() => {
+      alert('MESSAGE SENT. I will respond after my exams.');
+      this.reset();
+    }, (error) => {
+      alert('FAILED: ' + JSON.stringify(error));
+    })
+    .finally(() => {
+      btn.innerHTML = "SEND MESSAGE";
+      btn.disabled = false;
+    });
+};
   // 4. BACKGROUND ANIMATION LOGIC
   const canvas = document.getElementById('bg-canvas');
   const ctx = canvas.getContext('2d');
@@ -540,8 +568,3 @@ const templateParams = {
 </script>
 </body>
 </html>
-
-
-
-
-
