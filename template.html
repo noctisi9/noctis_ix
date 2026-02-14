@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Noctis IX | Investigation Log</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        :root { 
+            --primary: #ff2a2a; 
+            --bg: #0a0a0a; 
+            --card-bg: #111;
+            --text: #eee;
+            --text-dim: #888;
+        }
+
+        body { 
+            background: var(--bg); 
+            color: var(--text); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.8; 
+            margin: 0;
+            padding: 60px 20px;
+        }
+
+        .container { max-width: 850px; margin: 0 auto; }
+
+        .back-link { 
+            color: var(--primary); 
+            text-decoration: none; 
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+
+        h1 { 
+            color: var(--primary); 
+            font-size: 2.8rem; 
+            text-transform: uppercase; 
+            margin-bottom: 10px;
+            line-height: 1.1;
+        }
+
+        .meta { 
+            color: var(--text-dim); 
+            font-size: 0.85rem; 
+            margin-bottom: 40px; 
+            border-bottom: 1px solid #222; 
+            padding-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .content-body { font-size: 1.15rem; }
+        .content-body h3 { 
+            color: var(--primary); 
+            margin-top: 45px; 
+            text-transform: uppercase;
+            border-left: 3px solid var(--primary);
+            padding-left: 15px;
+        }
+        
+        /* Image Placeholder Styling */
+        .content-body img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #333;
+            margin: 20px 0;
+        }
+
+        footer { margin-top: 80px; text-align: center; color: var(--text-dim); font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="study.html" class="back-link">← Return to Logic Lab</a>
+        
+        <h1 id="title">Initializing...</h1>
+        <div class="meta" id="date">Checking Database Connection...</div>
+        
+        <div class="content-body" id="content">
+            </div>
+
+        <footer>
+            &copy; 2026 NOCTIS IX | LOGIC LAB TERMINAL
+        </footer>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCechk_U54bJCdsi3CY1B8HueeQXFeEveE",
+            authDomain: "noctis-i9.firebaseapp.com",
+            projectId: "noctis-i9",
+            storageBucket: "noctis-i9.firebasestorage.app",
+            messagingSenderId: "32989428853",
+            appId: "1:32989428853:web:49597558fc6d6dc3598c3c"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        // Capture the ID from the URL string
+        const urlParams = new URLSearchParams(window.location.search);
+        const docId = urlParams.get('id');
+
+        if (docId) {
+            db.collection("logic_lab").doc(docId).get().then((doc) => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    document.getElementById('title').innerText = data.title;
+                    document.getElementById('content').innerHTML = data.content;
+                    
+                    if (data.createdAt) {
+                        document.getElementById('date').innerText = "ENTRY LOGGED: " + data.createdAt.toDate().toDateString();
+                    }
+                } else {
+                    document.getElementById('title').innerText = "ERROR 404";
+                    document.getElementById('content').innerHTML = "Investigation document not found in database.";
+                }
+            }).catch((error) => {
+                console.error("Transmission Error:", error);
+            });
+        } else {
+            window.location.href = "study.html";
+        }
+    </script>
+</body>
+</html>
