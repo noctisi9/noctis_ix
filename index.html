@@ -2,571 +2,332 @@
 <html lang="en">
 <head>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-<script type="text/javascript">
-  (function() {
-    emailjs.init("LOqsRAyS4cF37l2j1"); 
-  })();
-
-</script>
+  <script type="text/javascript">
+    (function() { emailjs.init("LOqsRAyS4cF37l2j1"); })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NOCTIS IX | Hub</title>
   <style>
-    /* RESET AND BASE STYLES */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      scroll-behavior: smooth;
+    :root {
+      --ducati-red: #E30213;
+      --bg-matte: #121212;
+      --text-muted: #db6464;
     }
 
-    html, body {
-      height: 100%;
-      font-family: Arial, sans-serif;
-      overflow-x: hidden;
-    }
-
-    /* BACKGROUND ANIMATION */
-    #bg-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      background: black;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    body { background-color: var(--bg-matte); color: white; overflow-x: hidden; }
 
     /* NAVIGATION */
     nav {
       position: fixed;
-      top: 0;
-      width: 100%;
-      height: 60px;
-      background: rgba(0,0,0,0.8);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 100;
-      backdrop-filter: blur(10px);
-    }
-
-    nav a {
-      margin: 0 20px;
-      text-decoration: none;
-      color: #fff;
-      font-weight: bold;
-      transition: color 0.3s ease;
-    }
-
-    nav a:hover {
-      color: #f00;
-    }
-
-    /* SECTION STYLES */
-    section {
-      min-height: 100vh;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 80px 20px;
-      color: white;
-      position: relative;
-    }
-
-    .section-content {
-      max-width: 1200px;
-      width: 100%;
-    }
-
-    /* HOME SECTION */
-    #home {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
-    }
-
-    #home h1 {
-      font-size: 4rem;
-      margin-bottom: 20px;
-      position: relative;
-      display: inline-block;
-    }
-
-    #home h1::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 3px;
-      background: #f00;
-    }
-
-    /* PROJECTS SECTION */
-    #projects {
-      background: transparent;
-    }
-
-    .staircase-container {
+      top: 0; width: 100%;
+      padding: 40px 60px;
       display: flex;
       justify-content: space-between;
-      width: 100%;
-      gap: 20px;
+      align-items: center;
+      z-index: 100;
+    }
+    .logo { font-weight: 900; letter-spacing: 2px; font-size: 1.2rem; }
+    .nav-links a { color: white; text-decoration: none; font-size: 0.7rem; margin-left: 30px; letter-spacing: 1px; }
+
+    /* HERO SECTION */
+    #hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 0 10%;
+      position: relative;
+    }
+    .watermark {
+      position: absolute;
+      right: 5%;
+      font-size: 35rem;
+      font-weight: 900;
+      color: rgba(255, 255, 255, 0.03);
+      z-index: 0;
+      user-select: none;
     }
 
-    .project-box {
-      flex: 1;
-      height: 400px;
-      background-size: cover;
-      background-position: center;
+    .content-left { z-index: 2; flex: 1; }
+    .tagline { color: var(--text-muted); font-size: 0.8rem; letter-spacing: 4px; display: block; margin-bottom: 10px; }
+    h1 { font-size: clamp(3rem, 8vw, 5rem); line-height: 1; margin-bottom: 30px; font-weight: 800; }
+    
+    .cta-button {
+      background: var(--ducati-red);
+      color: white;
+      padding: 15px 40px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.8rem;
+      display: inline-block;
+      transition: 0.3s;
+      border: none;
+      text-transform: uppercase;
+    }
+    .cta-button:hover { transform: scale(1.05); }
+
+    /* SPECS */
+    .spec-grid { 
+      margin-top: 40px; 
+      border-left: 1px solid #333; 
+      padding-left: 20px; 
+    }
+    .spec-item { margin-bottom: 20px; }
+    .spec-item label { 
+      display: block; 
+      font-size: 0.6rem; 
+      color: var(--text-muted); 
+      letter-spacing: 2px; 
+      text-transform: uppercase; 
+    }
+    .spec-item span { font-size: 0.9rem; font-weight: 600; }
+
+    /* VISUAL */
+    .hero-visual { 
+      flex: 1.5; 
+      position: relative; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      transform: translateY(-10%); 
+    }
+    .hero-video-asset { 
+      max-width: 100%; 
+      z-index: 1; 
+      filter: drop-shadow(0 30px 50px rgba(0,0,0,1)); 
+    }
+
+    /* SOCIALS */
+    .social-stack { position: absolute; bottom: 40px; left: 60px; display: flex; flex-direction: column; gap: 20px; }
+    .social-stack a { color: var(--text-muted); text-decoration: none; font-size: 0.7rem; writing-mode: vertical-rl; }
+
+    /* MODAL */
+    .login-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
+    .login-content { background: #1a1a1a; padding: 40px; border: 1px solid var(--ducati-red); border-radius: 4px; text-align: center; }
+
+    /* PROJECT GRID */
+    #projects {
+      min-height: 100vh;
+      padding: 100px 10%;
+      background: var(--bg-matte);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); 
+      grid-auto-rows: 400px;
+      gap: 20px;
+    }
+    .project-card {
       position: relative;
+      background-color: #1a1a1a;
+      border: 1px solid #333;
       overflow: hidden;
-      border-radius: 10px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-      transition: all 0.5s ease;
+      transition: 0.4s ease;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       padding: 30px;
-      color: white;
       text-decoration: none;
     }
-
-    /* Desktop Staircase offsets */
-.project-box:nth-child(1) { background-image: url('assets/img1.1.png'); margin-bottom: 60px; }
-.project-box:nth-child(2) { background-image: url('assets/img1.2.png'); margin-bottom: 40px; }
-.project-box:nth-child(3) { background-image: url('assets/img1.3.png'); margin-bottom: 20px; }
-.project-box:nth-child(4) { background-image: url('assets/img1.4.png'); }
-
-    .project-box::before {
-      content: '';
+    .project-card:hover { border-color: var(--ducati-red); transform: translateY(-5px); }
+    .card-bg {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(to top, rgba(245, 106, 106, 0.4), transparent);
-      z-index: 1;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.3) grayscale(0.5);
+      transition: 0.6s ease;
+      z-index: 0;
     }
+    .project-card:hover .card-bg { filter: brightness(0.5) grayscale(0); transform: scale(1.05); }
+    .project-card span, .project-card h3 { position: relative; z-index: 2; }
+    .project-card span { color: var(--ducati-red); font-size: 0.7rem; font-weight: bold; margin-bottom: 5px; }
+    .project-card h3 { color: white; font-size: 1.2rem; letter-spacing: 1px; }
 
-    .project-box:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 30px rgba(234, 0, 0, 0.568);
-    }
+    .project-card.wide { grid-column: span 2; }
+    .project-card.video-card { padding: 0; background: black; }
+    .card-video-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; opacity: 0.6; }
+    .video-content { position: relative; z-index: 2; width: 100%; height: 100%; padding: 30px; display: flex; flex-direction: column; justify-content: flex-end; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); }
 
-    .project-content {
-      position: relative;
-      z-index: 2;
-    }
-
-    .project-box h3 {
-      font-size: 1.5rem;
-      margin-bottom: 10px;
-      color: #f00;
-    }
-
-    /* ABOUT SECTION */
-    .two-column {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-    }
-
-    .info-box, .form-box {
-      background: transparent;
-      padding: 30px;
-      border-radius: 10px;
-      border-left: 3px solid #f00;
-    }
-
-    .info-box h2, .form-box h2 {
-      color: #f00;
-      margin-bottom: 20px;
-    }
-
-    .info-box p { margin-bottom: 15px; line-height: 1.6; }
-
-    .contact-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-
-    .contact-item i { margin-right: 15px; color: #f00; }
-
-    /* FORM STYLES */
-    .form-group { margin-bottom: 20px; }
-    .form-group label { display: block; margin-bottom: 5px; color: #f00; }
-    .form-group input, .form-group textarea {
-      width: 100%;
-      padding: 10px;
-      background: rgba(255,255,255,0.1);
-      border: none;
-      border-bottom: 1px solid #f00;
-      color: white;
-    }
-    .form-group textarea { min-height: 100px; }
-
-    button {
-      background: #f00;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      padding: 12px 30px;
-      cursor: pointer;
-      text-transform: uppercase;
-      font-weight: bold;
-      transition: all 0.3s;
-    }
-    button:hover { background: #c00; }
-
-    /* SCROLL DOWN ARROW */
-    .scroll-down {
-      position: absolute;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      color: white;
-      font-size: 2rem;
-      animation: bounce 2s infinite;
-      cursor: pointer;
-      z-index: 10;
-    }
-
-    @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
-      40% { transform: translateY(-20px) translateX(-50%); }
-      60% { transform: translateY(-10px) translateX(-50%); }
-    }
-
-    /* LOGIN MODAL */
-    .login-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .login-content {
-      background: rgb(153, 51, 51);
-      padding: 40px;
-      border-radius: 10px;
-      width: 400px;
-      max-width: 90%;
-      border: 1px solid #f00;
-      position: relative;
-    }
-
-    /* RESPONSIVE BREAKPOINTS */
-
-    /* Tablet View (max-width: 1024px) */
-    @media (max-width: 1024px) {
-      .staircase-container {
-        gap: 15px;
-      }
-      .project-box {
-        height: 350px;
-        margin-bottom: 0 !important; /* Flatten staircase on tablets */
-      }
-      #home h1 {
-        font-size: 3rem;
-      }
-    }
-
-    /* Mobile View (max-width: 768px) */
-    @media (max-width: 768px) {
-      nav a {
-        margin: 0 10px;
-        font-size: 0.85rem;
-      }
-      #home h1 {
-        font-size: 2.2rem;
-      }
-      .staircase-container {
-        flex-direction: column; /* Vertical stack */
-      }
-      .project-box {
-        height: 280px;
-        margin-bottom: 20px !important;
-        flex: none;
-      }
-      .two-column {
-        grid-template-columns: 1fr; /* Stack About info and Contact form */
-      }
-      .section-content {
-        padding: 0 10px;
-      }
-      .login-content {
-        width: 90%;
-        padding: 25px;
-      }
-    }
-
-    /* Small Mobile (max-width: 480px) */
-    @media (max-width: 480px) {
-       nav a {
-         margin: 0 5px;
-       }
-       #home h1 {
-         font-size: 1.8rem;
-       }
-       section {
-         padding: 60px 15px;
-       }
-    }
+    /* ANIMATIONS */
+    .reveal-on-scroll { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); will-change: transform, opacity; }
+    .reveal-on-scroll.active { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: 0.2s; }
+    .delay-2 { transition-delay: 0.4s; }
+    .delay-3 { transition-delay: 0.6s; }
+    .vision-line { width: 2px; height: 0; background-color: var(--ducati-red); transition: height 1s ease-out 0.8s; }
+    .active .vision-line { height: 60px; }
   </style>
 </head>
 <body>
-  <canvas id="bg-canvas"></canvas>
 
-  <nav>
-    <a href="#home">Home</a>
-    <a href="#projects">Projects</a>
-    <a href="#about">About</a>
-  </nav>
+<nav>
+  <div class="logo">NOCTIS IX</div>
+  <div class="nav-links">
+    <a href="trade.html">TRADE</a>
+    <a href="study.html">STUDY</a>
+    <a href="blog.html">BLOG</a>
+    <a href="entrepreneur.html">ENTREPRENEUR</a>
+    <a href="#" id="auth-status-btn" style="color: var(--ducati-red); font-weight: 800;">CHECKING...</a>
+  </div>
+</nav>
 
-  <section id="home">
-    <div class="section-content">
-      <h1>NOCTIS IX</h1>
-      <p>I AM: I WAS: I WILL BE</p>
+<section id="hero">
+  <div class="watermark">IX</div>
+  <div class="content-left">
+  <span class="tagline reveal-on-scroll">I AM : I WAS : I WILL BE</span>
+  <h1 class="reveal-on-scroll delay-1">NOCTIS IX</h1>
+  <a href="#projects" class="cta-button reveal-on-scroll delay-2">PRE-ORDER FREEDOM</a>
+  
+  <div class="spec-grid reveal-on-scroll delay-3">
+    <div class="spec-item">
+      <label>Identity</label>
+      <span>THE ARCHITECT</span>
     </div>
-    <div class="scroll-down" onclick="document.querySelector('#projects').scrollIntoView({behavior: 'smooth'})">
-      ↓
+    <div class="spec-item">
+      <label>Objective</label>
+      <span>ABSOLUTE WEALTH</span>
     </div>
-  </section>
-
-  <section id="projects">
-    <div class="section-content">
-      <h2 style="text-align: center; margin-bottom: 40px; color: rgb(255, 255, 255);">Student Entrepreneur Projects</h2>
-      <div class="staircase-container">
-        <a href="trade.html" class="project-box">
-          <div class="project-content">
-          </div>
-        </a>
-        <a href="study.html" class="project-box">
-          <div class="project-content">
-          </div>
-        </a>
-        <a href="blog.html" class="project-box">
-          <div class="project-content">
-          </div>
-        </a>
-        <a href="entrepreneur.html" class="project-box">
-          <div class="project-content">
-          </div>
-        </a>
-      </div>
+    <div class="spec-item">
+      <label>Status</label>
+      <span>EVOLVING</span>
     </div>
-    <div class="scroll-down" onclick="document.querySelector('#about').scrollIntoView({behavior: 'smooth'})">
-      ↓
-    </div>
-  </section>
-
-  <section id="about">
-  <div class="section-content">
-    <div class="two-column">
-      <div class="info-box">
-        <h2>THE ARCHITECT</h2>
-        <p style="color: #f00; font-weight: bold; letter-spacing: 2px; margin-bottom: 20px;">
-          ENTREPRENEUR | TRADER | STUDENT
-        </p>
-        
-        <p>
-          Wealth is a language. To possess it, you must first learn it. My entry into the markets and entrepreneurship is driven by a singular objective: <b>Absolute Financial Freedom.</b> 
-        </p>
-        
-        <p>
-          I operate with an analytical mind that thrives on calculated risk. I study the world to extract value. I share these interpretations—not as gospel, but as fuel for the next individual to find their own edge.
-        </p>
-
-        <p>
-          <b>The Vision:</b> When you enter this hub, the objective is evolution. Discover, grow, and become rich.
-        </p>
-
-        <div class="contact-list" style="margin-top: 30px;">
-          <div class="contact-item"><i>✉️</i><span>noctisblacc@gmail.com</span></div>
-          <div class="contact-item"><i>📱</i><span>@noctis_i9</span></div>
-          <div class="contact-item"><i>📍</i><span>Digital Nomad | Global HQ</span></div>
-        </div>
-      </div>
-
-      <div class="form-box">
-        <h2>Establish Connection</h2>
-        <form id="contact-form">
-          <div class="form-group">
-            <label for="name">Identification</label>
-            <input type="text" id="name" placeholder="Your Name" required>
-          </div>
-          <div class="form-group">
-            <label for="email">Digital Address</label>
-            <input type="email" id="email" placeholder="Email" required>
-          </div>
-          <div class="form-group">
-            <label for="message">Transmission</label>
-            <textarea id="message" placeholder="Your Message..." required></textarea>
-          </div>
-          <button type="submit">Send Message</button>
-        </form>
-      </div>
-    </div>
+  </div>
+</div>
+  <div class="hero-visual">
+    <video autoplay muted loop playsinline class="hero-video-asset">
+      <source src="/assets/video/Nature_Relax_vibe.mp4" type="video/mp4">
+      <img src="assets/img/368640f7387cf1b2007c27b19279f1a5.jpg" alt="Fallback">
+    </video>
+  </div>
+  <div class="social-stack">
+    <a href="#">INSTAGRAM</a>
+    <a href="#">TWITTER</a>
+    <a href="#">EMAIL</a>
   </div>
 </section>
 
-
-  </section>
-
-  <div class="login-modal" id="loginModal">
-  <div class="login-content" style="text-align: center;">
-    <h2 style="color: white; margin-bottom: 20px;">Access Required</h2>
-    <p style="color: rgba(255,255,255,0.8); margin-bottom: 30px;">Please sign in with Google to continue.</p>
-    
-    <button id="google-login-btn" style="background: white; color: #444; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 10px; padding: 12px; border: none; font-weight: bold; cursor: pointer; transition: transform 0.2s;">
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18">
-        Continue with Google
-    </button>
+<div class="login-modal" id="loginModal">
+  <div class="login-content">
+    <h2 style="margin-bottom: 20px;">ACCESS RESTRICTED</h2>
+    <button id="google-login-btn" style="background: white; color: black; padding: 10px 20px; border: none; cursor: pointer; font-weight: bold;">CONTINUE WITH GOOGLE</button>
   </div>
 </div>
 
-  <script>
-  // 1. FIREBASE CONFIGURATION
+<section id="projects">
+  <a href="trade.html" class="project-card">
+    <div class="card-bg" style="background-image: url('assets/img/img1.1.png');"></div>
+    <span>SYSTEM 01</span><h3>TRADE</h3>
+  </a>
+  <a href="study.html" class="project-card">
+    <div class="card-bg" style="background-image: url('assets/img/img1.2.png');"></div>
+    <span>SYSTEM 02</span><h3>STUDY</h3>
+  </a>
+  <a href="blog.html" class="project-card">
+    <div class="card-bg" style="background-image: url('assets/img/img1.3.png');"></div>
+    <span>SYSTEM 03</span><h3>BLOG</h3>
+  </a>
+  <a href="entrepreneur.html" class="project-card">
+    <div class="card-bg" style="background-image: url('assets/img/img1.4.png');"></div>
+    <span>SYSTEM 04</span><h3>ENTREPRENEUR</h3>
+  </a>
+  <a href="network.html" class="project-card wide video-card">
+    <video class="card-video-bg" autoplay muted loop playsinline poster="/assets/img/fallback.jpg">
+      <source src="assets/video/Nature_Relax_vibe.mp4" type="video/mp4">
+    </video>
+    <div class="video-content"><span>SYSTEM 05</span><h3>NETWORK EXPANSION</h3></div>
+  </a>
+</section>
+
+<section id="connect" style="padding: 100px 10%; border-top: 1px solid #222;">
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 100px;">
+    <div>
+      <span class="tagline reveal-on-scroll">TRANSMISSION</span>
+      <h2 class="reveal-on-scroll delay-1" style="font-size: 3rem; margin-bottom: 20px;">ESTABLISH<br>CONNECTION</h2>
+      <p class="reveal-on-scroll delay-2" style="color: white; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6; font-weight: 500;">
+        Wealth is a language. To possess it, you must first learn it. My entry into the markets and entrepreneurship is driven by a singular objective: <span style="color: var(--ducati-red);">Absolute Financial Freedom.</span>
+      </p>
+      <div class="reveal-on-scroll delay-3" style="display: flex; gap: 20px; align-items: flex-start;">
+        <div class="vision-line"></div>
+        <div>
+          <span style="display: block; font-size: 0.7rem; letter-spacing: 2px; color: var(--ducati-red);">THE VISION</span>
+          <p style="font-size: 1.2rem; font-weight: 600; text-transform: uppercase; margin-top: 10px;">Discover. Grow. Become Rich.</p>
+        </div>
+      </div>
+    </div>
+    <form id="contact-form">
+      <input type="text" id="name" placeholder="IDENTIFICATION" required style="width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; color: white; padding: 15px 0; margin-bottom: 30px; outline: none;">
+      <input type="email" id="email" placeholder="DIGITAL ADDRESS" required style="width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; color: white; padding: 15px 0; margin-bottom: 30px; outline: none;">
+      <textarea id="message" placeholder="MESSAGE" required style="width: 100%; background: transparent; border: none; border-bottom: 1px solid #333; color: white; padding: 15px 0; margin-bottom: 40px; outline: none; min-height: 100px;"></textarea>
+      <button type="submit" class="cta-button" style="width: 100%; cursor: pointer;">SEND MESSAGE</button>
+    </form>
+  </div>
+</section>
+
+<script>
+  // Firebase Initialization
   const firebaseConfig = {
     apiKey: "AIzaSyCechk_U54bJCdsi3CY1B8HueeQXFeEveE",
     authDomain: "noctis-i9.firebaseapp.com",
     projectId: "noctis-i9",
     storageBucket: "noctis-i9.firebasestorage.app",
     messagingSenderId: "32989428853",
-    appId: "1:32989428853:web:49597558fc6d6dc3598c3c",
-    measurementId: "G-V09L4Q8D7S"
+    appId: "1:32989428853:web:49597558fc6d6dc3598c3c"
   };
-
-  // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
+  const authBtn = document.getElementById('auth-status-btn');
 
-  // 2. AUTHENTICATION LOGIC
-  document.getElementById('google-login-btn').onclick = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider)
-      .then((result) => {
-        closeModal();
-      }).catch((error) => alert(error.message));
-  };
-
-  // 3. MODAL CONTROL
   function openModal() { document.getElementById('loginModal').style.display = 'flex'; }
   function closeModal() { document.getElementById('loginModal').style.display = 'none'; }
 
   auth.onAuthStateChanged(user => {
     if (!user) {
+      authBtn.innerHTML = "LOGIN";
+      authBtn.onclick = openModal;
       setTimeout(openModal, 4000);
     } else {
+      authBtn.innerHTML = "LOGOUT";
+      authBtn.onclick = () => auth.signOut();
       closeModal();
     }
   });
-document.getElementById('contact-form').onsubmit = function(e) {
-  e.preventDefault();
-  const btn = this.querySelector('button');
-  btn.innerHTML = "TRANSMITTING...";
-  btn.disabled = true;
 
-  const templateParams = {
-    from_name: document.getElementById('name').value,
-    from_email: document.getElementById('email').value,
-    message: document.getElementById('message').value
+  document.getElementById('google-login-btn').onclick = () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    auth.signInWithPopup(provider).then(closeModal);
   };
 
-  emailjs.send('service_8rfoefj', 'template_xswe4zs', templateParams)
-    .then(() => {
-      alert('MESSAGE SENT. I will respond after my exams.');
+  // EmailJS Integration
+  document.getElementById('contact-form').onsubmit = function(e) {
+    e.preventDefault();
+    const btn = this.querySelector('button');
+    btn.innerHTML = "TRANSMITTING...";
+    btn.disabled = true;
+
+    emailjs.send('service_8rfoefj', 'template_xswe4zs', {
+      from_name: document.getElementById('name').value,
+      from_email: document.getElementById('email').value,
+      message: document.getElementById('message').value
+    }).then(() => {
+      alert('MESSAGE SENT. EVOLVE.');
       this.reset();
-    }, (error) => {
-      alert('FAILED: ' + JSON.stringify(error));
-    })
-    .finally(() => {
+    }).finally(() => {
       btn.innerHTML = "SEND MESSAGE";
       btn.disabled = false;
     });
-};
-  // 4. BACKGROUND ANIMATION LOGIC
-  const canvas = document.getElementById('bg-canvas');
-  const ctx = canvas.getContext('2d');
-  let particles = [];
-  const particleCount = 80;
-  let mouseX = window.innerWidth / 2;
-  let mouseY = window.innerHeight / 2;
+  };
 
-  function setCanvasSize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-
-  function initParticles() {
-    particles = [];
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 3 + 1,
-        speedX: (Math.random() - 0.5) * 1,
-        speedY: (Math.random() - 0.5) * 1,
-        color: `rgba(${Math.floor(Math.random() * 100 + 155)}, 0, 0, ${Math.random() * 0.7 + 0.1})`
-      });
-    }
-  }
-
-  window.addEventListener('resize', () => {
-    setCanvasSize();
-    initParticles();
-  });
-
-  window.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
-
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach((particle) => {
-      particle.x += particle.speedX;
-      particle.y += particle.speedY;
-      if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1;
-      if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1;
-      
-      ctx.fillStyle = particle.color;
-      ctx.beginPath();
-      ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-      ctx.fill();
-      
-      const dist = Math.sqrt(Math.pow(particle.x - mouseX, 2) + Math.pow(particle.y - mouseY, 2));
-      if (dist < 150) {
-        ctx.strokeStyle = particle.color;
-        ctx.lineWidth = 0.5;
-        ctx.beginPath();
-        ctx.moveTo(particle.x, particle.y);
-        ctx.lineTo(mouseX, mouseY);
-        ctx.stroke();
-      }
+  // Scroll Observer
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('active');
     });
-    requestAnimationFrame(animate);
-  }
+  }, { threshold: 0.2 });
 
-  setCanvasSize();
-  initParticles();
-  animate();
+  document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
 </script>
 </body>
 </html>
-
-
