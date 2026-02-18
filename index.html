@@ -24,21 +24,21 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
     body { background-color: var(--bg-matte); color: white; overflow-x: hidden; width: 100%; }
 
-    /* --- SECTION: NAVIGATION --- */
+    /* --- NAVIGATION --- */
     nav {
       position: fixed;
       top: 0; width: 100%;
-      padding: 40px 60px;
+      padding: 30px 60px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 100;
-      transition: 0.3s;
+      background: linear-gradient(to bottom, rgba(18,18,18,1), rgba(18,18,18,0));
     }
     .logo { font-weight: 900; letter-spacing: 2px; font-size: 1.2rem; }
     .nav-links a { color: white; text-decoration: none; font-size: 0.7rem; margin-left: 30px; letter-spacing: 1px; }
 
-    /* --- SECTION: HERO (DESKTOP) --- */
+    /* --- HERO --- */
     #hero {
       height: 100vh;
       display: flex;
@@ -49,7 +49,7 @@
     .watermark {
       position: absolute;
       right: 5%;
-      font-size: 35rem;
+      font-size: clamp(10rem, 30vw, 35rem);
       font-weight: 900;
       color: rgba(255, 255, 255, 0.03);
       z-index: 0;
@@ -74,7 +74,6 @@
       text-transform: uppercase;
       text-align: center;
     }
-    .cta-button:hover { transform: scale(1.05); }
 
     .spec-grid { margin-top: 40px; border-left: 1px solid #333; padding-left: 20px; }
     .spec-item { margin-bottom: 20px; }
@@ -87,24 +86,11 @@
       display: flex; 
       justify-content: center; 
       align-items: center; 
-      transform: translateY(-10%); 
       z-index: 2;
     }
     .hero-video-asset { max-width: 100%; filter: drop-shadow(0 30px 50px rgba(0,0,0,1)); }
 
-    .social-stack { 
-      position: absolute; 
-      bottom: 40px; 
-      left: 60px; 
-      display: flex; 
-      flex-direction: column; 
-      gap: 25px; 
-      z-index: 4; 
-    }
-    .social-stack a { color: var(--text-muted); text-decoration: none; font-size: 1.2rem; transition: 0.3s; }
-    .social-stack a:hover { color: white; transform: scale(1.1); }
-
-    /* --- SECTION: PROJECTS GRID --- */
+    /* --- PROJECTS --- */
     #projects {
       min-height: 100vh;
       padding: 100px 10%;
@@ -119,70 +105,66 @@
       background-color: #1a1a1a;
       border: 1px solid #333;
       overflow: hidden;
-      transition: 0.4s ease;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       padding: 30px;
       text-decoration: none;
     }
-    .card-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; filter: brightness(0.3) grayscale(0.5); transition: 0.6s ease; z-index: 0; }
-    .project-card:hover .card-bg { filter: brightness(0.5) grayscale(0); transform: scale(1.05); }
+    .card-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; filter: brightness(0.3); z-index: 0; }
     .project-card span, .project-card h3 { position: relative; z-index: 2; }
-    .project-card span { color: var(--ducati-red); font-size: 0.7rem; font-weight: bold; margin-bottom: 5px; }
-    .project-card h3 { color: white; font-size: 1.2rem; letter-spacing: 1px; }
+    .project-card span { color: var(--ducati-red); font-size: 0.7rem; font-weight: bold; }
+    .project-card h3 { color: white; font-size: 1.2rem; }
     .project-card.wide { grid-column: span 2; }
 
-    /* --- SECTION: CONNECT --- */
+    /* --- CONNECT --- */
     .connect-container { display: grid; grid-template-columns: 1fr 1fr; gap: 100px; padding: 100px 10%; border-top: 1px solid #222; }
 
-    /* --- MOBILE REFINEMENTS (CONSOLIDATED) --- */
-    @media (max-width: 600px) {
-      /* Nav: One line fix */
-      nav { padding: 20px 5%; background: rgba(18, 18, 18, 0.95); }
-      .logo { font-size: 1rem; }
-      .nav-links a { margin-left: 8px; font-size: 0.5rem; letter-spacing: 0.5px; }
+    /* --- MOBILE REFINEMENTS --- */
+    @media (max-width: 768px) {
+      nav { padding: 20px; flex-direction: column; background: #121212; }
+      .nav-links { margin-top: 15px; }
+      .nav-links a { margin: 0 10px; font-size: 0.6rem; }
 
-      /* Hero Content: 30% Down */
-      #hero { padding: 0 5%; flex-direction: column; justify-content: flex-start; }
-      .content-left { width: 100%; transform: translateY(30vh); } 
-      h1 { font-size: 2.8rem; margin-bottom: 20px; }
-
-      /* Spec Grid: 10% Right */
-      .spec-grid { transform: translateX(10%); z-index: 3; position: relative; }
-
-      /* Visual: Background Video Shifted 5% Left */
-      .hero-visual {
-        position: absolute;
-        width: 130%;
-        height: 100%;
-        left: -5%;
-        top: 0;
-        z-index: 0;
-        opacity: 0.4;
-        pointer-events: none;
-        transform: none;
+      #hero { 
+        height: auto; 
+        padding: 120px 5% 60px; 
+        flex-direction: column; 
+        text-align: center;
       }
-      .hero-video-asset { object-fit: cover; height: 100%; filter: none; }
-
-      /* Social Stack: Behind the Line */
-  
-
-      /* Stacks */
-      #projects { grid-template-columns: 1fr; padding: 40px 5%; grid-auto-rows: 350px; }
+      .content-left { width: 100%; margin-bottom: 50px; }
+      .spec-grid { 
+        border-left: none; 
+        border-top: 1px solid #333; 
+        padding: 20px 0; 
+        display: flex; 
+        justify-content: center; 
+        gap: 20px; 
+      }
+      
+      .hero-visual { width: 100%; transform: none; }
+      
+      #projects { 
+        grid-template-columns: 1fr; 
+        grid-auto-rows: 250px; 
+        padding: 40px 5%; 
+      }
       .project-card.wide { grid-column: span 1; }
-      .connect-container { grid-template-columns: 1fr; gap: 40px; padding: 40px 5%; }
+      
+      .connect-container { 
+        grid-template-columns: 1fr; 
+        gap: 40px; 
+        padding: 60px 5%; 
+        text-align: center; 
+      }
     }
 
-    /* --- SECTION: ANIMATIONS --- */
-    .reveal-on-scroll { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); will-change: transform, opacity; }
+    /* --- ANIMATIONS --- */
+    .reveal-on-scroll { opacity: 0; transform: translateY(20px); transition: 0.8s ease-out; }
     .reveal-on-scroll.active { opacity: 1; transform: translateY(0); }
-    .delay-1 { transition-delay: 0.2s; }
-    .delay-2 { transition-delay: 0.4s; }
-    .delay-3 { transition-delay: 0.6s; }
     
-    .login-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
-    .login-content { background: #1a1a1a; padding: 40px; border: 1px solid var(--ducati-red); border-radius: 4px; text-align: center; }
+    .login-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; }
+    .login-content { background: #1a1a1a; padding: 40px; border: 1px solid var(--ducati-red); text-align: center; width: 90%; max-width: 400px; }
   </style>
 </head>
 <body>
@@ -200,13 +182,12 @@
 
   <section id="hero">
     <div class="watermark">IX</div>
-    
     <div class="content-left">
       <span class="tagline reveal-on-scroll">I AM : I WAS : I WILL BE</span>
-      <h1 class="reveal-on-scroll delay-1">NOCTIS IX</h1>
-      <a href="#projects" class="cta-button reveal-on-scroll delay-2">PRE-ORDER FREEDOM</a>
+      <h1 class="reveal-on-scroll">NOCTIS IX</h1>
+      <a href="#projects" class="cta-button reveal-on-scroll">PRE-ORDER FREEDOM</a>
       
-      <div class="spec-grid reveal-on-scroll delay-3">
+      <div class="spec-grid reveal-on-scroll">
         <div class="spec-item"><label>Identity</label><span>THE ARCHITECT</span></div>
         <div class="spec-item"><label>Objective</label><span>ABSOLUTE WEALTH</span></div>
         <div class="spec-item"><label>Status</label><span>EVOLVING</span></div>
@@ -222,8 +203,9 @@
 
   <div class="login-modal" id="loginModal">
     <div class="login-content">
-      <h2 style="margin-bottom: 20px;">ACCESS RESTRICTED</h2>
-      <button id="google-login-btn" style="background: white; color: black; padding: 10px 20px; border: none; cursor: pointer; font-weight: bold;">CONTINUE WITH GOOGLE</button>
+      <h2 style="margin-bottom: 20px; font-size: 1rem;">ACCESS RESTRICTED</h2>
+      <button id="google-login-btn" style="background: white; color: black; padding: 12px 24px; border: none; cursor: pointer; font-weight: bold; width: 100%;">CONTINUE WITH GOOGLE</button>
+      <button onclick="document.getElementById('loginModal').style.display='none'" style="background: transparent; color: #666; border: none; margin-top: 15px; cursor: pointer;">CLOSE</button>
     </div>
   </div>
 
@@ -254,8 +236,8 @@
     <div class="connect-container">
       <div>
         <span class="tagline reveal-on-scroll">TRANSMISSION</span>
-        <h2 class="reveal-on-scroll delay-1" style="font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 20px;">ESTABLISH<br>CONNECTION</h2>
-        <p class="reveal-on-scroll delay-2" style="color: white; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6;">
+        <h2 class="reveal-on-scroll" style="font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 20px;">ESTABLISH<br>CONNECTION</h2>
+        <p class="reveal-on-scroll" style="color: white; font-size: 1rem; margin-bottom: 25px; line-height: 1.6;">
           Wealth is a language. My entry into the markets is driven by a singular objective: <span style="color: var(--ducati-red);">Absolute Freedom.</span>
         </p>
       </div>
@@ -282,14 +264,13 @@
     const auth = firebase.auth();
     const authBtn = document.getElementById('auth-status-btn');
 
-    // Auth Handling
     auth.onAuthStateChanged(user => {
       if (!user) {
         authBtn.innerHTML = "LOGIN";
-        authBtn.onclick = () => document.getElementById('loginModal').style.display = 'flex';
+        authBtn.onclick = (e) => { e.preventDefault(); document.getElementById('loginModal').style.display = 'flex'; }
       } else {
         authBtn.innerHTML = "LOGOUT";
-        authBtn.onclick = () => auth.signOut();
+        authBtn.onclick = (e) => { e.preventDefault(); auth.signOut(); }
       }
     });
 
@@ -297,7 +278,6 @@
       auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
     };
 
-    // Scroll Reveal Handling
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => { 
         if (entry.isIntersecting) entry.target.classList.add('active'); 
@@ -308,5 +288,4 @@
   </script>
 </body>
 </html>
-
 
