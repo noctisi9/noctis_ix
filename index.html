@@ -267,42 +267,58 @@
 
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyCechk_U54bJCdsi3CY1B8HueeQXFeEveE",
-      authDomain: "noctis-i9.firebaseapp.com",
-      projectId: "noctis-i9",
-      storageBucket: "noctis-i9.firebasestorage.app",
-      messagingSenderId: "32989428853",
-      appId: "1:32989428853:web:49597558fc6d6dc3598c3c"
-    };
+    apiKey: "AIzaSyCechk_U54bJCdsi3CY1B8HueeQXFeEveE",
+    authDomain: "noctis-i9.firebaseapp.com",
+    projectId: "noctis-i9",
+    storageBucket: "noctis-i9.firebasestorage.app",
+    messagingSenderId: "32989428853",
+    appId: "1:32989428853:web:49597558fc6d6dc3598c3c"
+  };
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const authBtn = document.getElementById('auth-status-btn');
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const authBtn = document.getElementById('auth-status-btn');
+  const loginModal = document.getElementById('loginModal');
 
-    auth.onAuthStateChanged(user => {
-      if (!user) {
-        authBtn.innerHTML = "LOGIN";
-        authBtn.onclick = (e) => { e.preventDefault(); document.getElementById('loginModal').style.display = 'flex'; }
-      } else {
-        authBtn.innerHTML = "LOGOUT";
-        authBtn.onclick = (e) => { e.preventDefault(); auth.signOut(); }
-      }
-    });
+  auth.onAuthStateChanged(user => {
+    if (!user) {
+      // User is logged out
+      authBtn.innerHTML = "LOGIN";
+      authBtn.onclick = (e) => { 
+        e.preventDefault(); 
+        loginModal.style.display = 'flex'; 
+      };
+    } else {
+      // User is logged in
+      authBtn.innerHTML = "LOGOUT";
+      loginModal.style.display = 'none'; // FIX: Auto-close modal on success
+      authBtn.onclick = (e) => { 
+        e.preventDefault(); 
+        auth.signOut(); 
+      };
+    }
+  });
 
-    document.getElementById('google-login-btn').onclick = () => {
-      auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => { 
-        if (entry.isIntersecting) entry.target.classList.add('active'); 
+  document.getElementById('google-login-btn').onclick = () => {
+    auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
+      .then(() => {
+        loginModal.style.display = 'none'; // FIX: Close immediately after popup success
+      })
+      .catch((error) => {
+        console.error("Auth Error:", error);
       });
-    }, { threshold: 0.1 });
+  };
 
-    document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
-  </script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { 
+      if (entry.isIntersecting) entry.target.classList.add('active'); 
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
 </body>
 </html>
+
 
 
 
